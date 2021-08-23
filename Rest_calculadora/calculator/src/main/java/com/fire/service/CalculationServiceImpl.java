@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,13 +16,6 @@ import java.util.Optional;
 public class CalculationServiceImpl {
 
     private static final Logger  logger = LoggerFactory.getLogger(CalculationServiceImpl.class);
-
-    private ResultSenderService resultSenderService;
-
-    @Autowired
-    public  CalculationServiceImpl(ResultSenderService resultSenderService){
-        this.resultSenderService = resultSenderService;
-    }
 
 
     @RabbitListener(queues = Constants.OPERATION_QUEUE)
@@ -42,7 +34,7 @@ public class CalculationServiceImpl {
             logger.info("Calculation succeeded with result: "+ mathOperationResult.get().getResult() );
             MDC.put("result",mathOperationResult.get().getResult().toString());
 
-            resultSenderService.send(mathOperationResult.get());
+            mathOperationResult.get();
         };
 
     }
